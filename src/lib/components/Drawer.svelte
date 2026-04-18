@@ -1,19 +1,11 @@
 <script>
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { onMount } from 'svelte';
 
-  const dispatch = createEventDispatcher();
-
-  /** @type {boolean} */
-  export let open = false;
-
-  /** @type {string | null} */
-  export let service = null;
-
-  /** @type {any} Feed data for the active service */
-  export let feed = null;
+  /** @type {{ open?: boolean, service?: string|null, feed?: any, onclose?: () => void }} */
+  let { open = false, service = null, feed = null, onclose = null } = $props();
 
   function close() {
-    dispatch('close');
+    onclose?.();
   }
 
   function handleKeydown(e) {
@@ -38,18 +30,18 @@
 </script>
 
 {#if open}
-  <div class="backdrop" on:click={close} aria-hidden="true" />
+  <div class="backdrop" onclick={close} aria-hidden="true"></div>
 
   <div
     class="drawer"
     role="dialog"
     aria-modal="true"
-    on:touchstart={handleTouchStart}
-    on:touchend={handleTouchEnd}
+    ontouchstart={handleTouchStart}
+    ontouchend={handleTouchEnd}
   >
     <div class="drawer-header">
       <span class="drawer-title">{service ?? ''}</span>
-      <button class="close-btn" on:click={close} aria-label="Close">✕</button>
+      <button class="close-btn" onclick={close} aria-label="Close">✕</button>
     </div>
 
     <div class="drawer-body">

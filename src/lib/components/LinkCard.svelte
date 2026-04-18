@@ -1,12 +1,6 @@
 <script>
-  /** @type {string} */
-  export let label;
-
-  /** @type {string | null} Direct URL — if set, renders as <a> */
-  export let href = null;
-
-  /** @type {boolean} Opens in new tab (for external links) */
-  export let external = false;
+  /** @type {{ label: string, href?: string|null, external?: boolean, onclick?: () => void, icon?: import('svelte').Snippet }} */
+  let { label, href = null, external = false, onclick = null, icon } = $props();
 </script>
 
 {#if href}
@@ -16,12 +10,12 @@
     rel={external ? 'noopener noreferrer' : null}
     class="card"
   >
-    <span class="icon"><slot name="icon" /></span>
+    <span class="icon">{@render icon?.()}</span>
     <span class="label">{label}</span>
   </a>
 {:else}
-  <button class="card" on:click>
-    <span class="icon"><slot name="icon" /></span>
+  <button class="card" {onclick}>
+    <span class="icon">{@render icon?.()}</span>
     <span class="label">{label}</span>
   </button>
 {/if}
@@ -39,6 +33,7 @@
     font-size: 14px;
     font-weight: 500;
     transition: background 0.15s;
+    cursor: pointer;
   }
 
   .card:hover {
