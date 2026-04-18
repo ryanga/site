@@ -8,6 +8,13 @@ export default {
       fallback: undefined,
       precompress: false,
       strict: true
-    })
+    }),
+    prerender: {
+      handleHttpError: ({ path, message }) => {
+        // Ignore missing placeholder assets that will be added later
+        if (path === '/photo.jpg') return;
+        throw new Error(message);
+      }
+    }
   }
 };
